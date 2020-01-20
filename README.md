@@ -11,7 +11,7 @@
 ```
 開発をするAPIの仕様を確認してみましょう。
 このMISSIONではスマートフォン向けゲームのAPIの開発を想定しています。
-API仕様YAML: [ここにURL]
+API仕様YAML: https://github.com/CyberAgentHack/techtrain-mission/blob/master/api-document.yaml
 上記のyamlファイルの内容をSwaggerEditorの画面左半分にコピー&ペーストで入力してみましょう。
 SwaggerEditor: https://editor.swagger.io/
 画面右半分に表示された内容が今回開発をする内容です。

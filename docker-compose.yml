@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  api-server:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    tty: true

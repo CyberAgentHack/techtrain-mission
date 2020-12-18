@@ -8,4 +8,22 @@ services:
       - 127.0.0.1:${PORT}:${PORT}
     env_file: ./.env
     tty: true
-
+    networks:
+      - api-network
+  mysql-server:
+    image: mysql:8.0
+    volumes:
+      - ./mysql/mysql-data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - api-network
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    ports:
+      - ${DB_PORT}
+networks:
+  api-network:
+    driver: bridge

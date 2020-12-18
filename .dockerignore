@@ -3,3 +3,6 @@ README.md
 .git
 .gitignore
 .dockerignore
+
+# MySQL
+./mysql/mysql-data/

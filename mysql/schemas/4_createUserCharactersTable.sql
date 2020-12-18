@@ -1,4 +1,4 @@
-drop table if exists usercharacters;
+drop table if exists `usercharacters`;
 
 /*
 usercharacters, which is master table, keeps information which each user gets.
@@ -17,10 +17,10 @@ create table `usercharacters` (
   `character_id` int NOT NULL,
   `ts` timestamp NOT NULL, 
   PRIMARY KEY (`id`),
-  foreign key (`user_id`) references `users(id)`
+  foreign key (`user_id`) references `users` (`id`)
     on delete RESTRICT
     on update RESTRICT,
-  foreign key (`character_id`) references `character(id)`
+  foreign key (`character_id`) references `characters` (`id`)
     on delete RESTRICT
     on update RESTRICT
 );

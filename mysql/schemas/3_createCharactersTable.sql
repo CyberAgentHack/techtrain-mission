@@ -1,4 +1,4 @@
-drop table if exists characters;
+drop table if exists `characters`;
 
 /*
 characters, which is a transaction table, keeps character information.
@@ -12,8 +12,8 @@ create table `characters` (
     `id` int AUTO_INCREMENT,
     `name` varchar(64) NOT NULL,
     `rarity_id` int NOT NULL,
-    PRIMARY KEY (`id`)
-    foreign key (`rank_id`) references `rank(id)`
+    PRIMARY KEY (`id`),
+    foreign key (`rarity_id`) references rarities(id)
       on delete RESTRICT
       on update CASCADE
 ) ;

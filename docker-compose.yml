@@ -4,4 +4,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
+    ports:
+      - 127.0.0.1:${PORT}:${PORT}
+    env_file: ./.env
     tty: true
+

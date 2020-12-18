@@ -1,4 +1,4 @@
-drop table if exists users;
+drop table if exists `users`;
 
 /*
 users, which is a transaction table, keeps user information.

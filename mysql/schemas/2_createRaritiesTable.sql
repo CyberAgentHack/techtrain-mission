@@ -1,4 +1,4 @@
-drop table if exists rarities;
+drop table if exists `rarities`;
 
 /*
 rarities, which is a master table, keeps rarity information for characters.
@@ -11,7 +11,7 @@ rarities, which is a master table, keeps rarity information for characters.
 */
 
 create table `rarities` (
-  `id` int unsigned,
+  `id` int,
   `name` int NOT NULL,
   `weight` int NOT NULL,
   PRIMARY KEY (`id`)

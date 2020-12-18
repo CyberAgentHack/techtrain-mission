@@ -18,6 +18,7 @@ services:
     volumes:
       - ./mysql/mysql-data:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/schemas:/docker-entrypoint-initdb.d
     networks:
       - api-network
     environment:

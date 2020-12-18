@@ -12,7 +12,7 @@ users, which is a transaction table, keeps user information.
 */
 
 create table `users` (
-  `id` int,
+  `id` int AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `token` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)

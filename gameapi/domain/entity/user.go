@@ -1,6 +1,10 @@
 package entity
 
-import "github.com/google/uuid"
+import (
+	"errors"
+
+	"github.com/google/uuid"
+)
 
 // User indicates user infomation
 type User struct {
@@ -15,8 +19,23 @@ type User struct {
 // NewUser returns the pointer for making new
 func NewUser(name string) *User {
 	return &User{
-		ID:    0,
+		ID:    -1, // this is invalid ID
 		Name:  name,
 		Token: uuid.New().String(),
 	}
+}
+
+// IsValid validates user entity
+// It might be moved domain service
+func (u *User) IsValid() error {
+	if u.ID == -1 {
+		return errors.New("user.ID is not assigned")
+	}
+	if len(u.Name) == 0 {
+		return errors.New("user.Name is empty")
+	}
+	if len(u.Token) == 0 {
+		return errors.New("user.Token is empty")
+	}
+	return nil
 }

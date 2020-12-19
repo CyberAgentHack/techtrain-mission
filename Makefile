@@ -1,5 +1,8 @@
 ENV_FILE := .env
-ENV := $(export `cat ${ENV_FILE} | xargs`)
+ENV := $(shell cat $(ENV_FILE))
+
+ENV_TEST_FILE := ./.env.test
+ENV_TEST := $(shell cat $(ENV_TEST_FILE))
 
 .PHONY:build
 build:

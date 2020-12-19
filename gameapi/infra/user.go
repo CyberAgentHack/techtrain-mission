@@ -47,7 +47,7 @@ func (u *UserRepository) Get(user *entity.User) error {
 func (u *UserRepository) Update(user *entity.User) error {
 	var dto *userDTO = newDTO(user)
 
-	if _, err := u.db.NamedExec(`UPDATE users SET name=? WHERE token=?`, dto); err != nil {
+	if _, err := u.db.NamedExec(`UPDATE users SET name=:name WHERE token=:token`, dto); err != nil {
 		return fmt.Errorf("failed db.NamedExec: %w", err)
 	}
 	return nil

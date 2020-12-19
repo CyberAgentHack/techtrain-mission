@@ -27,7 +27,7 @@ func (u *User) CreateWithName(name string) (*entity.User, error) {
 	return userE, nil
 }
 
-// GetWithToken gets userinformation with token
+// GetWithToken gets user information with token
 func (u *User) GetWithToken(token string) (*entity.User, error) {
 	userE := entity.NewUser("")
 	userE.Token = token
@@ -35,4 +35,14 @@ func (u *User) GetWithToken(token string) (*entity.User, error) {
 		return nil, fmt.Errorf("failed userRepo.GetWithToken: %w", err)
 	}
 	return userE, nil
+}
+
+// UpdateWithToken updates user information with token
+func (u *User) UpdateWithToken(token string, name string) error {
+	userE := entity.NewUser(name)
+	userE.Token = token
+	if err := u.userRepo.Update(userE); err != nil {
+		return fmt.Errorf("failed userRepo.Update: %w", err)
+	}
+	return nil
 }

@@ -24,11 +24,6 @@ func NewUser(userUC *usecase.User) *User {
 // in: name(string), request body required
 // out: token(string) StatusOK
 func (u *User) Create(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "this method is for POST method", http.StatusMethodNotAllowed)
-		return
-	}
-
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
@@ -61,6 +56,8 @@ func (u *User) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	return
 }
@@ -68,12 +65,8 @@ func (u *User) Create(w http.ResponseWriter, r *http.Request) {
 // Get handles GET /user/get
 // Get user information
 // in: x-token(string), request header required
+// out: name(string) StatusOK
 func (u *User) Get(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "this handler is for GET method", http.StatusMethodNotAllowed)
-		return
-	}
-
 	token := r.Header.Get("x-token")
 	if len(token) == 0 {
 		http.Error(w, "x-token must not be empty", http.StatusBadRequest)
@@ -97,6 +90,45 @@ func (u *User) Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+// Update handles PUT /user/update
+// Update user information
+// in: x-token(string), request header required
+//     name(string), request body required
+// out: StatusOK
+func (u *User) Update(w http.ResponseWriter, r *http.Request) {
+	token := r.Header.Get("x-token")
+	if len(token) == 0 {
+		http.Error(w, "x-token must not be empty", http.StatusBadRequest)
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
+		return
+	}
+	var req UserUpdateRequest
+	if err := json.Unmarshal(body, &req); err != nil {
+		http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+	if len(req.Name) == 0 {
+		http.Error(w, "name must not be empty", http.StatusBadRequest)
+		return
+	}
+
+	if err := u.userUC.UpdateWithToken(token, req.Name); err != nil {
+		http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	return
 }

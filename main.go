@@ -33,11 +33,15 @@ func main() {
 			log.Println(cerr)
 		}
 	}()
+
 	userRepo := infra.NewUserRepository(db)
 	userUC := usecase.NewUser(userRepo)
 	user := handler.NewUser(userUC)
+
 	http.HandleFunc("/user/create", user.Create)
 	http.HandleFunc("/user/get", user.Get)
+	http.HandleFunc("/user/update", user.Update)
+
 	log.Printf("Start App: listening on port %s", port)
 
 	// graceful shutdown

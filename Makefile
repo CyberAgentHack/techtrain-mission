@@ -9,6 +9,10 @@ build:
 run:
 	$(ENV) && ./server
 
+.PHONY:test
+test:
+	$(ENV_TEST) go test -v -count=1 ./gameapi/...
+
 .PHONY:docker-up
 docker-up:
 	$(ENV) docker-compose up --build -d

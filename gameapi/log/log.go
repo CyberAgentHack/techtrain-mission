@@ -1,4 +1,4 @@
-package gameapi
+package log
 
 import (
 	"log"
@@ -11,17 +11,14 @@ type Logger interface {
 	Debugf(string, ...interface{})
 }
 
-// NewLogger returns the pointer for logger
-func NewLogger() *Logger {
-	return &logger
-}
-
 // RawLogger is used to store raw *log.Logger
 type RawLogger struct {
 	Logger *log.Logger
 }
 
-// Logger exports the pointer log.Logger
+var debugOn = false
+
+// NewLogger exports the pointer log.Logger
 // If you use other logger, replace logger in `func init()`
 var logger Logger = &RawLogger{
 	Logger: log.New(os.Stderr, "", log.LstdFlags),
@@ -41,5 +38,7 @@ func (rl *RawLogger) Warnf(format string, v ...interface{}) {
 // Debugf is a log for debug
 // it is not output to *log.Logger
 func (rl *RawLogger) Debugf(format string, v ...interface{}) {
-	// suppress debug logs
+	if debugOn {
+		rl.Logger.Printf(format, v...)
+	}
 }

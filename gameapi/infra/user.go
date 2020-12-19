@@ -33,11 +33,13 @@ func (u *UserRepository) Store(user *entity.User) error {
 
 // Get gets user entity
 func (u *UserRepository) Get(user *entity.User) error {
-	var dto *userDTO = newDTO(user)
+	dto := userDTO{}
 
-	if err := u.db.Get(&dto, `SELECT * FROM users WHERE token=:token`, dto); err != nil {
-		return fmt.Errorf("failed db.Get: %w", err)
+	if err := u.db.Get(&dto, `SELECT * FROM users WHERE token=?`, user.Token); err != nil {
+		return fmt.Errorf("failed db.Select: %w", err)
 	}
+	user.ID = dto.ID
+	user.Name = dto.Name
 	return nil
 }
 
@@ -45,7 +47,7 @@ func (u *UserRepository) Get(user *entity.User) error {
 func (u *UserRepository) Update(user *entity.User) error {
 	var dto *userDTO = newDTO(user)
 
-	if _, err := u.db.NamedExec(`UPDATE users SET name=:name`, dto); err != nil {
+	if _, err := u.db.NamedExec(`UPDATE users SET name=? WHERE token=?`, dto); err != nil {
 		return fmt.Errorf("failed db.NamedExec: %w", err)
 	}
 	return nil

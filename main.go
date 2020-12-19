@@ -14,31 +14,16 @@ import (
 	"github.com/task4233/techtrain-mission/gameapi/usecase"
 )
 
-// TestHandler is for testing
-func TestHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Request: %s\n", r.URL)
-
-	db, err := infra.NewDB()
-	if err != nil {
-		log.Println("failed newDB", err)
-	}
-	defer func() {
-		cerr := db.Close()
-		if err != nil {
-			log.Println(cerr)
-		}
-	}()
-
-	w.WriteHeader(http.StatusOK)
-	return
-}
-
 func main() {
 	var port string = os.Getenv("PORT")
 	srv := &http.Server{Addr: ":" + port}
 
 	db, err := infra.NewDB()
 	if err != nil {
+		log.Println("failed newDB", err)
+		os.Exit(1)
+	}
+	if db == nil {
 		log.Println("failed newDB", err)
 		os.Exit(1)
 	}
@@ -51,8 +36,8 @@ func main() {
 	userRepo := infra.NewUserRepository(db)
 	userUC := usecase.NewUser(userRepo)
 	user := handler.NewUser(userUC)
-	http.HandleFunc("/", TestHandler)
 	http.HandleFunc("/user/create", user.Create)
+	http.HandleFunc("/user/get", user.Get)
 	log.Printf("Start App: listening on port %s", port)
 
 	// graceful shutdown

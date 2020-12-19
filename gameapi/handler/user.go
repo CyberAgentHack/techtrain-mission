@@ -24,42 +24,81 @@ func NewUser(userUC *usecase.User) *User {
 // in: name(string), request body required
 // out: token(string) StatusOK
 func (u *User) Create(w http.ResponseWriter, r *http.Request) {
-	req, err := mapUserCreateRequest(r)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed mapping: %v", err), http.StatusInternalServerError)
+	if r.Method != http.MethodPost {
+		http.Error(w, "this method is for POST method", http.StatusMethodNotAllowed)
 		return
 	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
+		return
+	}
+	var req UserCreateRequest
+	if err := json.Unmarshal(body, &req); err != nil {
+		http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+	if len(req.Name) == 0 {
+		http.Error(w, "name must not be empty", http.StatusBadRequest)
+		return
+	}
+
 	userE, err := u.userUC.CreateWithName(req.Name)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed mapping: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed CreateWithName: %v", err), http.StatusInternalServerError)
 		return
 	}
-	var res UserCreateResponse
-	res.Token = userE.Token
+
+	res := UserCreateResponse{Token: userE.Token}
 	resJSON, err := json.Marshal(res)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed marshal: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
 		return
 	}
 	_, err = w.Write(resJSON)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed marshal: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	return
 }
 
-func mapUserCreateRequest(r *http.Request) (*UserCreateRequest, error) {
-	body, err := ioutil.ReadAll(r.Body)
+// Get handles GET /user/get
+// Get user information
+// in: x-token(string), request header required
+func (u *User) Get(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "this handler is for GET method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	token := r.Header.Get("x-token")
+	if len(token) == 0 {
+		http.Error(w, "x-token must not be empty", http.StatusBadRequest)
+		return
+	}
+
+	userE, err := u.userUC.GetWithToken(token)
 	if err != nil {
-		return nil, fmt.Errorf("failed ReadAll: %w", err)
+		http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
+		return
 	}
-	var req UserCreateRequest
-	if err := json.Unmarshal(body, &req); err != nil {
-		return nil, fmt.Errorf("failed Unmarshal: %w", err)
+
+	res := UserGetResponse{Name: userE.Name}
+	resJSON, err := json.Marshal(res)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
+		return
 	}
-	return &req, nil
+	_, err = w.Write(resJSON)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	return
 }
 
 // UserCreateRequest is struct for request on creating user

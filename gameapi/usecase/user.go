@@ -26,3 +26,13 @@ func (u *User) CreateWithName(name string) (*entity.User, error) {
 	}
 	return userE, nil
 }
+
+// GetWithToken gets userinformation with token
+func (u *User) GetWithToken(token string) (*entity.User, error) {
+	userE := entity.NewUser("")
+	userE.Token = token
+	if err := u.userRepo.Get(userE); err != nil {
+		return nil, fmt.Errorf("failed userRepo.GetWithToken: %w", err)
+	}
+	return userE, nil
+}

@@ -10,7 +10,7 @@ build:
 
 .PHONY:run
 run:
-	$(ENV) && ./server
+	$(ENV) ./server
 
 .PHONY:test
 test:

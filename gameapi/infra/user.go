@@ -22,11 +22,12 @@ func NewUserRepository(db *sqlx.DB) *UserRepository {
 
 // Store stores user entity
 func (u *UserRepository) Store(user *entity.User) error {
-	var dto *userDTO = newDTO(user)
+	dto := newDTO(user)
 
 	if _, err := u.db.NamedExec(`INSERT INTO users (name, token) VALUES (:name, :token)`, dto); err != nil {
 		return fmt.Errorf("failed db.NamedExec: %w", err)
 	}
+
 	return nil
 }
 

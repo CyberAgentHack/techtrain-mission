@@ -18,6 +18,17 @@ import (
 func TestHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Request: %s\n", r.URL)
 
+	db, err := infra.NewDB()
+	if err != nil {
+		log.Println("failed newDB", err)
+	}
+	defer func() {
+		cerr := db.Close()
+		if err != nil {
+			log.Println(cerr)
+		}
+	}()
+
 	w.WriteHeader(http.StatusOK)
 	return
 }
@@ -29,7 +40,14 @@ func main() {
 	db, err := infra.NewDB()
 	if err != nil {
 		log.Println("failed newDB", err)
+		os.Exit(1)
 	}
+	defer func() {
+		cerr := db.Close()
+		if err != nil {
+			log.Println(cerr)
+		}
+	}()
 	userRepo := infra.NewUserRepository(db)
 	userUC := usecase.NewUser(userRepo)
 	user := handler.NewUser(userUC)

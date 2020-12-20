@@ -1,7 +1,7 @@
 drop table if exists `characters`;
 
 /*
-characters, which is a transaction table, keeps character information.
+characters, which is a master table, keeps character information.
  - ID is PRIMARY KEY
  - name is NOT NULL
  - rarity_id is foreign key and NOT NULL

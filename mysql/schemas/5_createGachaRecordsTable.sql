@@ -1,26 +1,26 @@
-drop table if exists `usercharacters`;
+drop table if exists `gacharecords`;
 
 /*
-usercharacters, which is transaction table, keeps information which each user has.
+gacharecords, which is master table, keeps information which each user takes gacha.
  - id is PRIMARY KEY
  - user_id is foreign key and NOT NULL
    To delete and update the related data is NOT ALLOWED.
  - character_id is foreign key and NOT NULL
    it's same as above
- - possessions is NOT NULL
-   It shows how many its characters the user has.
+ - ts is NOT NULL
+   it shows when the user takes gacha
 */
 
-create table `usercharacters` (
+create table `gacharecords` (
   `id` int,
   `user_id` int NOT NULL,
   `character_id` int NOT NULL,
-  `posessions` int NOT NULL, 
+  `ts` timestamp NOT NULL, 
   PRIMARY KEY (`id`),
   foreign key (`user_id`) references `users` (`id`)
     on delete RESTRICT
-    on update CASCADE,
+    on update RESTRICT,
   foreign key (`character_id`) references `characters` (`id`)
     on delete RESTRICT
-    on update CASCADE
+    on update RESTRICT
 );

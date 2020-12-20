@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  api-server:
+    container_name: "api-server"
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 127.0.0.1:${PORT}:${PORT}
+    env_file: ./.env.test
+    restart: always
+    tty: true
+    networks:
+      - api-network
+  mysql-server:
+    container_name: "mysql-server"
+    image: mysql:8.0
+    env_file: ./.env.test
+    volumes:
+      - ./mysql/mysql-data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/schemas:/docker-entrypoint-initdb.d
+    networks:
+      - api-network
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    restart: always
+    ports:
+     - 3306:3306
+networks:
+  api-network:
+    driver: bridge

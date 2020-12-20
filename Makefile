@@ -10,7 +10,7 @@ build:
 
 .PHONY:run
 run:
-	$(ENV) ./server
+	export `$(ENV) | xargs` && ./server
 
 .PHONY:test
 test:
@@ -18,8 +18,12 @@ test:
 
 .PHONY:docker-up
 docker-up:
-	$(ENV) docker-compose up --build -d
+	$(ENV) docker-compose -f docker-compose.yml up --build -d
 
 .PHONY:docker-down
 docker-down:
 	docker-compose down
+
+.PHONY:docker-up-for-test
+docker-up-for-test:
+	export `$(ENV_TEST) | xargs` && docker-compose -f docker-compose.test.yml up --build -d

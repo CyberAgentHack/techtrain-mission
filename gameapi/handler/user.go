@@ -51,14 +51,14 @@ func (u *User) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(resJSON)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
 	return
 }
 
@@ -85,14 +85,15 @@ func (u *User) Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	_, err = w.Write(resJSON)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.WriteHeader(http.StatusOK)
+
 	return
 }
 

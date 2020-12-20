@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>handler: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/task4233/techtrain-mission/gameapi/handler/user.go (26.5%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package handler
+
+import (
+        "encoding/json"
+        "fmt"
+        "io/ioutil"
+        "net/http"
+
+        "github.com/task4233/techtrain-mission/gameapi/usecase"
+)
+
+// User is struct
+type User struct {
+        userUC *usecase.User
+}
+
+// NewUser returns a pointer for User
+func NewUser(userUC *usecase.User) *User <span class="cov8" title="1">{
+        return &amp;User{userUC: userUC}
+}</span>
+
+// Create handles for POST /user/create
+// Create creates user information
+// in: name(string), request body required
+// out: token(string) StatusOK
+func (u *User) Create(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+        body, err := ioutil.ReadAll(r.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov8" title="1">var req UserCreateRequest
+        if err := json.Unmarshal(body, &amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov8" title="1">if len(req.Name) == 0 </span><span class="cov8" title="1">{
+                http.Error(w, "name must not be empty", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov8" title="1">userE, err := u.userUC.CreateWithName(req.Name)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed CreateWithName: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov8" title="1">res := UserCreateResponse{Token: userE.Token}
+        resJSON, err := json.Marshal(res)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov8" title="1">w.Header().Set("Content-Type", "application/json")
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.WriteHeader(http.StatusOK)
+        _, err = w.Write(resJSON)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+// Get handles GET /user/get
+// Get user information
+// in: x-token(string), request header required
+// out: name(string) StatusOK
+func (u *User) Get(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        token := r.Header.Get("x-token")
+        if len(token) == 0 </span><span class="cov0" title="0">{
+                http.Error(w, "x-token must not be empty", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userE, err := u.userUC.GetWithToken(token)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res := UserGetResponse{Name: userE.Name}
+        resJSON, err := json.Marshal(res)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+        w.Header().Set("Content-Type", "application/json")
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        _, err = w.Write(resJSON)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+}
+
+// Update handles PUT /user/update
+// Update user information
+// in: x-token(string), request header required
+//     name(string), request body required
+// out: StatusOK
+func (u *User) Update(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        token := r.Header.Get("x-token")
+        if len(token) == 0 </span><span class="cov0" title="0">{
+                http.Error(w, "x-token must not be empty", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">body, err := ioutil.ReadAll(r.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov0" title="0">var req UserUpdateRequest
+        if err := json.Unmarshal(body, &amp;req); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+        <span class="cov0" title="0">if len(req.Name) == 0 </span><span class="cov0" title="0">{
+                http.Error(w, "name must not be empty", http.StatusBadRequest)
+                return
+        }</span>
+
+        <span class="cov0" title="0">if err := u.userUC.UpdateWithToken(token, req.Name); err != nil </span><span class="cov0" title="0">{
+                http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.WriteHeader(http.StatusOK)</span>
+}
+
+// UserCreateRequest is struct for request on creating user
+type UserCreateRequest struct {
+        Name string `json:"name"`
+}
+
+// UserCreateResponse is struct for response on creating user
+type UserCreateResponse struct {
+        Token string `json:"token"`
+}
+
+// UserGetResponse is struct for response on getting user
+type UserGetResponse struct {
+        Name string `json:"name"`
+}
+
+// UserUpdateRequest is struct for request on updating user
+type UserUpdateRequest struct {
+        Name string `json:"name"`
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

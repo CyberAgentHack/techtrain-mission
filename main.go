@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,57 +9,39 @@ import (
 	"syscall"
 	"time"
 
-	// for mysql
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/task4233/techtrain-mission/gameapi/handler"
+	"github.com/task4233/techtrain-mission/gameapi/infra"
+	"github.com/task4233/techtrain-mission/gameapi/usecase"
 )
-
-// TestHandler is for testing
-func TestHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Request: %s\n", r.URL)
-
-	var connString string = fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_DATABASE"),
-	) + "?parseTime=true&collation=utf8mb4_bin"
-	db, err := sql.Open("mysql", connString)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "failed sql.Open: %s", err)
-		return
-	}
-	defer db.Close()
-	rows, err := db.Query("SELECT version()")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "failed Query: %s", err)
-		return
-	}
-	if ok := rows.Next(); !ok {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("failed rows.Next"))
-		return
-	}
-
-	var version string
-	if err = rows.Scan(&version); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "failed Scan: %s", err)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "mysql version: %s\n", version)
-	return
-}
 
 func main() {
 	var port string = os.Getenv("PORT")
 	srv := &http.Server{Addr: ":" + port}
-	http.HandleFunc("/", TestHandler)
+
+	db, err := infra.NewDB()
+	if err != nil {
+		log.Println("failed newDB", err)
+		os.Exit(1)
+	}
+	if db == nil {
+		log.Println("failed newDB", err)
+		os.Exit(1)
+	}
+	defer func() {
+		cerr := db.Close()
+		if err != nil {
+			log.Println(cerr)
+		}
+	}()
+
+	userRepo := infra.NewUserRepository(db)
+	userUC := usecase.NewUser(userRepo)
+	user := handler.NewUser(userUC)
+
+	http.HandleFunc("/user/create", user.Create)
+	http.HandleFunc("/user/get", user.Get)
+	http.HandleFunc("/user/update", user.Update)
+
 	log.Printf("Start App: listening on port %s", port)
 
 	// graceful shutdown

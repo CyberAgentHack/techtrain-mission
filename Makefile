@@ -14,7 +14,7 @@ build: lint
 
 .PHONY:run
 run:
-	export `$(ENV) | xargs` && ./server
+	$(ENV) && ./server
 
 .PHONY:down
 down:
@@ -26,7 +26,7 @@ docker-up: down
 
 .PHONY:docker-up-for-test
 docker-up-for-test: down
-	export `$(ENV_TEST) | xargs` && docker-compose -f docker-compose.test.yml up --build -d
+	$(ENV_TEST) docker-compose -f docker-compose.test.yml up --build -d
 
 
 .PHONY:test

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd gameapi
+cd goapi
 echo "run goimports"
 goimports -w .
 
@@ -17,10 +17,12 @@ echo "run gosec"
 gosec ./...
 
 echo "run staticcheck"
-staticcheck .
+staticcheck ./gameapi/...
 
 echo "run errcheck"
 errcheck ./...
 
 echo "run misspell"
 misspell .
+
+cd ..

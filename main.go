@@ -52,10 +52,10 @@ func main() {
 	}()
 
 	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGTERM)
+	signal.Notify(quit, syscall.SIGTERM, os.Interrupt)
 	log.Printf("SIGNAL %d received, then shutting down...\n", <-quit)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Printf("failed to shutdown: %+v", err)

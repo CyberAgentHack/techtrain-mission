@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// User indicates user infomation
+// User indicates user information
 type User struct {
 	// ID is assigned on calling /user/create
 	ID int

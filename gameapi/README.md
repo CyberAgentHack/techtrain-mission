@@ -3,13 +3,12 @@
  - [API specification](https://github.com/CyberAgentHack/techtrain-mission/blob/master/api-document.yaml)
  - [SwaggerEdittor](https://editor.swagger.io/)
 
-## Usage
+## Serve
 ```
 make docker-up
 ```
 
 ## Test
 ```
-make docker-up-for-test
 make test
 ```

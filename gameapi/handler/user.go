@@ -59,7 +59,6 @@ func (u *User) Create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
-	return
 }
 
 // Get handles GET /user/get
@@ -93,8 +92,6 @@ func (u *User) Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("failed w.Write: %v", err), http.StatusInternalServerError)
 		return
 	}
-
-	return
 }
 
 // Update handles PUT /user/update
@@ -131,7 +128,6 @@ func (u *User) Update(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
-	return
 }
 
 // UserCreateRequest is struct for request on creating user

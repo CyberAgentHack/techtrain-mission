@@ -3,7 +3,7 @@ drop table if exists `rarities`;
 /*
 rarities, which is a master table, keeps rarity information for characters.
  - ID is PRIMARY KEY
- - name is NOT NULL
+ - value is NOT NULL
    it's prepared for expansion for future work
    if no needs, this column will be deleted
  - weight is NOT NULL
@@ -11,8 +11,8 @@ rarities, which is a master table, keeps rarity information for characters.
 */
 
 create table `rarities` (
-  `id` int,
-  `name` int NOT NULL,
+  `id` int AUTO_INCREMENT,
+  `value` int NOT NULL,
   `weight` int NOT NULL,
   PRIMARY KEY (`id`)
 );

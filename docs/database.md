@@ -1,5 +1,9 @@
 # データベース設計
 デフォルトではMySQL 8.0を使用しています。
+ローカルから直接通信する場合は, `$ make docker-up-for-test`を使用してください。
+その場合, `$ mysql -h 127.0.0.1 -u ${DB_USER} -p {DB_NAME}`でmysql-clientからアクセスできます。
+
+スキーマは, `mysql/schemas`に置かれています。。
 
 生成されるテーブルは下記の5種類です。
 1. users

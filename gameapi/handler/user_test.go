@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,6 +11,7 @@ import (
 
 	"github.com/task4233/techtrain-mission/gameapi/handler"
 	"github.com/task4233/techtrain-mission/gameapi/infra"
+	"github.com/task4233/techtrain-mission/gameapi/log"
 	"github.com/task4233/techtrain-mission/gameapi/usecase"
 )
 
@@ -70,6 +70,9 @@ func TUserCreate(t *testing.T, user *handler.User) {
 }
 
 func TUserGet(t *testing.T, user *handler.User) {
+	logger := log.MyLogger
+	log.SetDebugStatus(true)
+
 	// prepare test data
 	reqStruct := handler.UserCreateRequest{Name: "test user"}
 	reqBody, err := json.Marshal(reqStruct)
@@ -125,7 +128,7 @@ func TUserGet(t *testing.T, user *handler.User) {
 		if err != nil {
 			t.Errorf("failed ioutil.ReadAll: %v", err)
 		}
-		log.Println(string(body))
+		logger.Debugf("response body: %s\n", string(body))
 		// expected want response
 		if strings.TrimSpace(string(body)) == tc.wantResponse {
 			continue
@@ -143,5 +146,62 @@ func TUserGet(t *testing.T, user *handler.User) {
 }
 
 func TUserUpdate(t *testing.T, user *handler.User) {
+	// prepare test data
+	reqStruct := handler.UserCreateRequest{Name: "test user"}
+	reqBody, err := json.Marshal(reqStruct)
+	if err != nil {
+		t.Fatalf("failed json.Marshal: %v", err)
+	}
+	req := httptest.NewRequest(http.MethodPost, "http://localhost:8080/user/create", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+	w := httptest.NewRecorder()
+	// Create test user
+	user.Create(w, req)
+	// Check
+	g := w.Result()
+	b, err := ioutil.ReadAll(g.Body)
+	if err != nil {
+		t.Errorf("failed ioutil.ReadAll: %v", err)
+	}
+	var userCraeteStruct handler.UserCreateResponse
+	if err := json.Unmarshal(b, &userCraeteStruct); err != nil {
+		t.Fatalf("failed json.Unmarshal: %v", err)
+	}
+	var token string = userCraeteStruct.Token
+
+	const endpoint = "http://localhost:8080/user/get"
+
+	cases := []struct {
+		name       string
+		reqMethod  string
+		reqHeader  string
+		reqText    string
+		wantStatus int
+	}{
+		{name: "正常なリクエスト", reqMethod: http.MethodPut, reqHeader: token, reqText: "new test user", wantStatus: http.StatusOK},
+		{name: "空のリクエストヘッダ", reqMethod: http.MethodPut, reqHeader: "", reqText: "new test user", wantStatus: http.StatusBadRequest},
+		{name: "空のリクエストボディ", reqMethod: http.MethodPut, reqHeader: token, reqText: "", wantStatus: http.StatusBadRequest},
+		{name: "存在しないtoken", reqMethod: http.MethodPut, reqHeader: "test token", reqText: "new test user", wantStatus: http.StatusInternalServerError},
+	}
+
+	for _, tc := range cases {
+		reqStruct := handler.UserUpdateRequest{Name: tc.reqText}
+		reqBody, err := json.Marshal(reqStruct)
+		if err != nil {
+			t.Fatalf("failed json.Marshal: %v", err)
+		}
+		req := httptest.NewRequest(tc.reqMethod, endpoint, bytes.NewBuffer(reqBody))
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("x-token", tc.reqHeader)
+
+		w := httptest.NewRecorder()
+
+		user.Update(w, req)
+		got := w.Result()
+
+		if got.StatusCode != tc.wantStatus {
+			t.Errorf("got: %d, wanted: %d", got.StatusCode, tc.wantStatus)
+		}
+	}
 
 }

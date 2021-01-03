@@ -1,4 +1,6 @@
 # gameapi - TechTrainMISSION
+[![Go Report Card](https://goreportcard.com/badge/github.com/task4233/techtrain-mission)](https://goreportcard.com/report/github.com/task4233/techtrain-mission)
+
 ## Description
  - [Given Specification](./docs/README.md)
  - [API specification](https://github.com/CyberAgentHack/techtrain-mission/blob/master/api-document.yaml)

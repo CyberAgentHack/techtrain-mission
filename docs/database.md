@@ -57,7 +57,7 @@
 |id|int|PRIMARY KEY|
 |user_id|int|NOT NULL, foreign key users(id)|
 |character_id|int|NOT NULL, foreign key characters(id)|
-|posessions|int|NOT NULL|
+|possessions|int|NOT NULL|
 
  - 外部キーのUPDATEは許されるのでCASCADEにしました
    - DELETEは許されないのでRESTRICTにしました

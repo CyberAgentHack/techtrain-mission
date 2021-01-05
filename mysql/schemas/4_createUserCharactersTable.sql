@@ -15,7 +15,7 @@ create table `usercharacters` (
   `id` int,
   `user_id` int NOT NULL,
   `character_id` int NOT NULL,
-  `posessions` int NOT NULL, 
+  `possessions` int NOT NULL, 
   PRIMARY KEY (`id`),
   foreign key (`user_id`) references `users` (`id`)
     on delete RESTRICT

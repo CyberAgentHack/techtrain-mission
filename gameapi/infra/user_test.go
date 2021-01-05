@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/task4233/techtrain-mission/gameapi/domain/entity"
+	"github.com/task4233/techtrain-mission/gameapi/mock"
 )
 
 // This test does not use mock
@@ -75,7 +76,7 @@ func TestUserInfraWithMock(t *testing.T) {
 	// 2. Get User information
 	// 3. Update User information
 
-	userRepo := NewTestUserRepository()
+	userRepo := mock.NewTestUserRepository()
 
 	// 1. Store
 	userE := entity.NewUser("test user")

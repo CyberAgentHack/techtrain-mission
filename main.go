@@ -9,13 +9,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/task4233/techtrain-mission/gameapi/config"
 	"github.com/task4233/techtrain-mission/gameapi/handler"
 	"github.com/task4233/techtrain-mission/gameapi/infra"
 	"github.com/task4233/techtrain-mission/gameapi/usecase"
 )
 
 func main() {
-	var port string = os.Getenv("PORT")
+	var port string = config.Port()
 	srv := &http.Server{Addr: ":" + port}
 
 	db, err := infra.NewDB()

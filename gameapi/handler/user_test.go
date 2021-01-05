@@ -10,14 +10,14 @@ import (
 	"testing"
 
 	"github.com/task4233/techtrain-mission/gameapi/handler"
-	"github.com/task4233/techtrain-mission/gameapi/infra"
 	"github.com/task4233/techtrain-mission/gameapi/log"
+	"github.com/task4233/techtrain-mission/gameapi/mock"
 	"github.com/task4233/techtrain-mission/gameapi/usecase"
 )
 
 func TestUser(t *testing.T) {
 	t.Parallel()
-	userRepo := infra.NewTestUserRepository()
+	userRepo := mock.NewTestUserRepository()
 	userUC := usecase.NewUser(userRepo)
 	user := handler.NewUser(userUC)
 

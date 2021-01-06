@@ -24,8 +24,8 @@ test: lint docker-up-for-test
 
 .PHONY:test-coverage
 test-coverage: lint docker-up-for-test
-	$(ENV_TEST) go test -v -count=1 -coverprofile=profile ./gameapi/...
-	go tool cover -html=profile -o ./cover.html
+	$(ENV_TEST) go test -v -count=1 -coverprofile=coverage.txt ./gameapi/...
+	go tool cover -html=coverage.txt -o ./cover.html
 
 .PHONY:build
 build: lint

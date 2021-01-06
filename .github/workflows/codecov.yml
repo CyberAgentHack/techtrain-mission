@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - master
+
+
+name: CI for codecov
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: [ '1.14.x', '1.15.x' ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Test Go Code
+        run: go test -covermode=atomic -coverprofile=coverage.txt ./gameapi/...
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.txt
+          yml: codecov.yml

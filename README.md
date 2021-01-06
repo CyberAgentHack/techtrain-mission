@@ -57,8 +57,7 @@ make docker-up
  - `make docker-up`: Serve using Docker
  - `make down`: Shutdown Docker Containers
  - `make test`: Test codes
- - `make test-coverage`: Test codes and export coverage
+ - `make test-with-coverage`: Test codes and export coverage
  - `make build`: Build codes
  - `make run`: Build codes and run
- - `make docker-up-for-test`: Serve for test using Docker
  - `make lint`: Run linters(goimports, gofmt, golint, gsc, gosec, staticcheck, errcheck, misspell)

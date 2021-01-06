@@ -1,7 +1,6 @@
 package infra
 
 import (
-	"os"
 	"testing"
 
 	"github.com/task4233/techtrain-mission/gameapi/domain/entity"
@@ -14,6 +13,7 @@ var (
 )
 
 // This test does not use mock
+/*
 func TestUserInfraWithMySQL(t *testing.T) {
 	// scenario
 	// 1. Store User with name
@@ -73,6 +73,7 @@ func TestUserInfraWithMySQL(t *testing.T) {
 		t.Errorf("might fail to update, actual: %v, wanted: %v", testE, recordE)
 	}
 }
+*/
 
 func TestUserInfraWithMock(t *testing.T) {
 	// scenario

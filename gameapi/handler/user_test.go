@@ -27,7 +27,7 @@ func TestUser(t *testing.T) {
 }
 
 func TUserCreate(t *testing.T, user *handler.User) {
-
+	t.Helper()
 	const endpoint = "http://localhost:8080/user/create"
 
 	cases := []struct {
@@ -70,6 +70,7 @@ func TUserCreate(t *testing.T, user *handler.User) {
 }
 
 func TUserGet(t *testing.T, user *handler.User) {
+	t.Helper()
 	logger := log.MyLogger
 
 	// prepare test data
@@ -145,6 +146,7 @@ func TUserGet(t *testing.T, user *handler.User) {
 }
 
 func TUserUpdate(t *testing.T, user *handler.User) {
+	t.Helper()
 	// prepare test data
 	reqStruct := handler.UserCreateRequest{Name: "test user"}
 	reqBody, err := json.Marshal(reqStruct)

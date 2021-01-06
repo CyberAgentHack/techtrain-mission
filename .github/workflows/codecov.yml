@@ -21,10 +21,10 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - name: Test Go Code
-        run: make test-coverage
+        run: make test-with-coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage.txt
+          file: coverage.out
           yml: codecov.yml

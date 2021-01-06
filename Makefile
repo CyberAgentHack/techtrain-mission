@@ -18,15 +18,13 @@ down:
 	docker-compose down
 
 .PHONY:test
-test: lint docker-up-for-test
-	$(ENV_TEST) go test -v -count=1 -covermode=atomic ./gameapi/...
-	make down
+test: lint
+	$(ENV_TEST) go test -covermode=atomic -coverprofile=coverage.out ./gameapi/...
 
-.PHONY:test-coverage
-test-coverage: lint docker-up-for-test
-	$(ENV_TEST) go test -v -count=1 -covermode=atomic -coverprofile=coverage.txt ./gameapi/...
-	go tool cover -html=coverage.txt -o ./cover.html
-	make down
+.PHONY:test-with-coverage
+test-with-coverage: 
+	$(ENV_TEST) go test -covermode=atomic -coverprofile=coverage.out ./gameapi/...
+	go tool cover -html=coverage.out -o ./cover.html
 
 .PHONY:build
 build: lint
@@ -35,10 +33,6 @@ build: lint
 .PHONY:run
 run: build
 	$(ENV_LOCAL) ./server
-
-.PHONY:docker-up-for-test
-docker-up-for-test: down
-	$(ENV_TEST) docker-compose -f docker-compose.test.yml up --build -d
 
 .PHONY:lint
 lint:

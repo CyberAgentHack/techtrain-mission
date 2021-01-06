@@ -2,7 +2,7 @@
 
 # Golang
 server
-*.txt
+*.out
 *.html
 
 # MySQL

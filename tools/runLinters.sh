@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd goapi
+cd gameapi
 echo "run goimports"
 goimports -w .
 
@@ -17,7 +17,7 @@ echo "run gosec"
 gosec ./...
 
 echo "run staticcheck"
-staticcheck ./gameapi/...
+staticcheck ./...
 
 echo "run errcheck"
 errcheck ./...

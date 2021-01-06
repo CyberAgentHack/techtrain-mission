@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>handler: Go Coverage Report</title>
+		<title>config: Go Coverage Report</title>
 		<style>
 			body {
 				background: black;
@@ -55,11 +55,11 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/task4233/techtrain-mission/gameapi/handler/user.go (73.5%)</option>
+				<option value="file0">github.com/task4233/techtrain-mission/gameapi/config/config.go (100.0%)</option>
 				
-				<option value="file1">github.com/task4233/techtrain-mission/gameapi/infra/database.go (70.0%)</option>
+				<option value="file1">github.com/task4233/techtrain-mission/gameapi/handler/user.go (73.5%)</option>
 				
-				<option value="file2">github.com/task4233/techtrain-mission/gameapi/infra/mock_user.go (88.2%)</option>
+				<option value="file2">github.com/task4233/techtrain-mission/gameapi/infra/database.go (70.0%)</option>
 				
 				<option value="file3">github.com/task4233/techtrain-mission/gameapi/infra/user.go (81.2%)</option>
 				
@@ -68,14 +68,58 @@
 			<div id="legend">
 				<span>not tracked</span>
 			
-				<span class="cov0">not covered</span>
-				<span class="cov8">covered</span>
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
 			
 			</div>
 		</div>
 		<div id="content">
 		
-		<pre class="file" id="file0" style="display: none">package handler
+		<pre class="file" id="file0" style="display: none">package config
+
+import (
+        "fmt"
+        "os"
+)
+
+// Port returns used port in .env
+func Port() string <span class="cov8" title="1">{
+        return os.Getenv("PORT")
+}</span>
+
+// DSN returns DataSourceName in .env
+func DSN() string <span class="cov8" title="1">{
+        return fmt.Sprintf(
+                "%s:%s@tcp(%s:%s)/%s",
+                os.Getenv("DB_USER"),
+                os.Getenv("DB_PASSWORD"),
+                os.Getenv("DB_HOST"),
+                os.Getenv("DB_PORT"),
+                os.Getenv("DB_DATABASE"),
+        ) + "?parseTime=true&amp;collation=utf8mb4_bin"
+}</span>
+
+// IsDev returns for development or not
+func IsDev() bool <span class="cov8" title="1">{
+        return os.Getenv("ENV") == "dev"
+}</span>
+
+// IsTest returns for test or not
+func IsTest() bool <span class="cov8" title="1">{
+        return os.Getenv("ENV") == "test"
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package handler
 
 import (
         "encoding/json"
@@ -92,7 +136,7 @@ type User struct {
 }
 
 // NewUser returns a pointer for User
-func NewUser(userUC *usecase.User) *User <span class="cov8" title="1">{
+func NewUser(userUC *usecase.User) *User <span class="cov1" title="1">{
         return &amp;User{userUC: userUC}
 }</span>
 
@@ -100,35 +144,35 @@ func NewUser(userUC *usecase.User) *User <span class="cov8" title="1">{
 // Create creates user information
 // in: name(string), request body required
 // out: token(string) StatusOK
-func (u *User) Create(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+func (u *User) Create(w http.ResponseWriter, r *http.Request) <span class="cov10" title="4">{
         body, err := ioutil.ReadAll(r.Body)
         if err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">var req UserCreateRequest
+        <span class="cov10" title="4">var req UserCreateRequest
         if err := json.Unmarshal(body, &amp;req); err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">if len(req.Name) == 0 </span><span class="cov8" title="1">{
+        <span class="cov10" title="4">if len(req.Name) == 0 </span><span class="cov1" title="1">{
                 http.Error(w, "name must not be empty", http.StatusBadRequest)
                 return
         }</span>
 
-        <span class="cov8" title="1">userE, err := u.userUC.CreateWithName(req.Name)
+        <span class="cov8" title="3">userE, err := u.userUC.CreateWithName(req.Name)
         if err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed CreateWithName: %v", err), http.StatusInternalServerError)
                 return
         }</span>
 
-        <span class="cov8" title="1">res := UserCreateResponse{Token: userE.Token}
+        <span class="cov8" title="3">res := UserCreateResponse{Token: userE.Token}
         resJSON, err := json.Marshal(res)
         if err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">w.Header().Set("Content-Type", "application/json")
+        <span class="cov8" title="3">w.Header().Set("Content-Type", "application/json")
         w.Header().Set("Access-Control-Allow-Origin", "*")
         w.WriteHeader(http.StatusOK)
         _, err = w.Write(resJSON)
@@ -142,26 +186,26 @@ func (u *User) Create(w http.ResponseWriter, r *http.Request) <span class="cov8"
 // Get user information
 // in: x-token(string), request header required
 // out: name(string) StatusOK
-func (u *User) Get(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+func (u *User) Get(w http.ResponseWriter, r *http.Request) <span class="cov8" title="3">{
         token := r.Header.Get("x-token")
-        if len(token) == 0 </span><span class="cov8" title="1">{
+        if len(token) == 0 </span><span class="cov1" title="1">{
                 http.Error(w, "x-token must not be empty", http.StatusBadRequest)
                 return
         }</span>
 
-        <span class="cov8" title="1">userE, err := u.userUC.GetWithToken(token)
-        if err != nil </span><span class="cov8" title="1">{
+        <span class="cov5" title="2">userE, err := u.userUC.GetWithToken(token)
+        if err != nil </span><span class="cov1" title="1">{
                 http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
                 return
         }</span>
 
-        <span class="cov8" title="1">res := UserGetResponse{Name: userE.Name}
+        <span class="cov1" title="1">res := UserGetResponse{Name: userE.Name}
         resJSON, err := json.Marshal(res)
         if err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed Marshal: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">w.WriteHeader(http.StatusOK)
+        <span class="cov1" title="1">w.WriteHeader(http.StatusOK)
         w.Header().Set("Content-Type", "application/json")
         w.Header().Set("Access-Control-Allow-Origin", "*")
         _, err = w.Write(resJSON)
@@ -176,34 +220,34 @@ func (u *User) Get(w http.ResponseWriter, r *http.Request) <span class="cov8" ti
 // in: x-token(string), request header required
 //     name(string), request body required
 // out: StatusOK
-func (u *User) Update(w http.ResponseWriter, r *http.Request) <span class="cov8" title="1">{
+func (u *User) Update(w http.ResponseWriter, r *http.Request) <span class="cov10" title="4">{
         token := r.Header.Get("x-token")
-        if len(token) == 0 </span><span class="cov8" title="1">{
+        if len(token) == 0 </span><span class="cov1" title="1">{
                 http.Error(w, "x-token must not be empty", http.StatusBadRequest)
                 return
         }</span>
 
-        <span class="cov8" title="1">body, err := ioutil.ReadAll(r.Body)
+        <span class="cov8" title="3">body, err := ioutil.ReadAll(r.Body)
         if err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed ReadAll: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">var req UserUpdateRequest
+        <span class="cov8" title="3">var req UserUpdateRequest
         if err := json.Unmarshal(body, &amp;req); err != nil </span><span class="cov0" title="0">{
                 http.Error(w, fmt.Sprintf("failed Unmarshal: %v", err), http.StatusInternalServerError)
                 return
         }</span>
-        <span class="cov8" title="1">if len(req.Name) == 0 </span><span class="cov8" title="1">{
+        <span class="cov8" title="3">if len(req.Name) == 0 </span><span class="cov1" title="1">{
                 http.Error(w, "name must not be empty", http.StatusBadRequest)
                 return
         }</span>
 
-        <span class="cov8" title="1">if err := u.userUC.UpdateWithToken(token, req.Name); err != nil </span><span class="cov8" title="1">{
+        <span class="cov5" title="2">if err := u.userUC.UpdateWithToken(token, req.Name); err != nil </span><span class="cov1" title="1">{
                 http.Error(w, fmt.Sprintf("failed GetWithToken: %v", err), http.StatusInternalServerError)
                 return
         }</span>
 
-        <span class="cov8" title="1">w.Header().Set("Access-Control-Allow-Origin", "*")
+        <span class="cov1" title="1">w.Header().Set("Access-Control-Allow-Origin", "*")
         w.WriteHeader(http.StatusOK)</span>
 }
 
@@ -228,13 +272,14 @@ type UserUpdateRequest struct {
 }
 </pre>
 		
-		<pre class="file" id="file1" style="display: none">package infra
+		<pre class="file" id="file2" style="display: none">package infra
 
 import (
         "fmt"
-        "os"
 
         "github.com/jmoiron/sqlx"
+        "github.com/task4233/techtrain-mission/gameapi/config"
+
         // for mysql
         _ "github.com/go-sql-driver/mysql"
 )
@@ -243,14 +288,7 @@ import (
 // If opening DB with this function, Do Close() like example
 func NewDB() (*sqlx.DB, error) <span class="cov8" title="1">{
         // this process might be moved config package
-        var DSN string = fmt.Sprintf(
-                "%s:%s@tcp(%s:%s)/%s",
-                os.Getenv("DB_USER"),
-                os.Getenv("DB_PASSWORD"),
-                os.Getenv("DB_HOST"),
-                os.Getenv("DB_PORT"),
-                os.Getenv("DB_DATABASE"),
-        ) + "?parseTime=true&amp;collation=utf8mb4_bin"
+        var DSN string = config.DSN()
 
         db, err := sqlx.Open("mysql", DSN)
         if err != nil </span><span class="cov0" title="0">{
@@ -266,63 +304,6 @@ func NewDB() (*sqlx.DB, error) <span class="cov8" title="1">{
         }</span>
 
         <span class="cov8" title="1">return db, nil</span>
-}
-</pre>
-		
-		<pre class="file" id="file2" style="display: none">package infra
-
-import (
-        "fmt"
-
-        "github.com/task4233/techtrain-mission/gameapi/domain/entity"
-        "github.com/task4233/techtrain-mission/gameapi/repository"
-)
-
-// TestUserRepository implements repository.User
-type TestUserRepository struct {
-        records [](*entity.User)
-}
-
-var _ repository.User = &amp;TestUserRepository{}
-
-// NewTestUserRepository returns the pointer for UserRepository
-func NewTestUserRepository() *TestUserRepository <span class="cov8" title="1">{
-        return &amp;TestUserRepository{
-                records: [](*entity.User){},
-        }
-}</span>
-
-// Store stores user entity
-func (t *TestUserRepository) Store(user *entity.User) error <span class="cov8" title="1">{
-        // user.ID is AUTO_INCREMENT
-        user.ID = len(t.records)
-        userE := user
-        t.records = append(t.records, userE)
-        return nil
-}</span>
-
-// Get gets user entity
-func (t *TestUserRepository) Get(user *entity.User) error <span class="cov8" title="1">{
-        for _, record := range t.records </span><span class="cov8" title="1">{
-                if record.Token == user.Token </span><span class="cov8" title="1">{
-                        user.ID = record.ID
-                        user.Name = record.Name
-                        return nil
-                }</span>
-        }
-        <span class="cov0" title="0">return fmt.Errorf("failed to Get: No records (%v)", user)</span>
-}
-
-// Update updates user entity
-func (t *TestUserRepository) Update(user *entity.User) error <span class="cov8" title="1">{
-        for _, record := range t.records </span><span class="cov8" title="1">{
-                if record.Token == user.Token </span><span class="cov8" title="1">{
-                        user.ID = record.ID
-                        user.Name = record.Name
-                        return nil
-                }</span>
-        }
-        <span class="cov0" title="0">return fmt.Errorf("failed to Update: No records (%v)", user)</span>
 }
 </pre>
 		
@@ -344,44 +325,44 @@ type UserRepository struct {
 var _ repository.User = &amp;UserRepository{}
 
 // NewUserRepository returns the pointer for UserRepository
-func NewUserRepository(db *sqlx.DB) *UserRepository <span class="cov8" title="1">{
+func NewUserRepository(db *sqlx.DB) *UserRepository <span class="cov1" title="1">{
         return &amp;UserRepository{db: db}
 }</span>
 
 // Store stores user entity
-func (u *UserRepository) Store(user *entity.User) error <span class="cov8" title="1">{
+func (u *UserRepository) Store(user *entity.User) error <span class="cov1" title="1">{
         dto := newDTO(user)
 
         if _, err := u.db.NamedExec(`INSERT INTO users (name, token) VALUES (:name, :token)`, dto); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed db.NamedExec: %w", err)
         }</span>
 
-        <span class="cov8" title="1">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
 // Get gets user entity
-func (u *UserRepository) Get(user *entity.User) error <span class="cov8" title="1">{
+func (u *UserRepository) Get(user *entity.User) error <span class="cov10" title="2">{
         dto := userDTO{}
 
         if err := u.db.Get(&amp;dto, `SELECT * FROM users WHERE token=?`, user.Token); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed db.Select: %w", err)
         }</span>
-        <span class="cov8" title="1">user.ID = dto.ID
+        <span class="cov10" title="2">user.ID = dto.ID
         user.Name = dto.Name
         return nil</span>
 }
 
 // Update updates user entity
-func (u *UserRepository) Update(user *entity.User) error <span class="cov8" title="1">{
+func (u *UserRepository) Update(user *entity.User) error <span class="cov1" title="1">{
         var dto *userDTO = newDTO(user)
 
         if _, err := u.db.NamedExec(`UPDATE users SET name=:name WHERE token=:token`, dto); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed db.NamedExec: %w", err)
         }</span>
-        <span class="cov8" title="1">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func newDTO(user *entity.User) *userDTO <span class="cov8" title="1">{
+func newDTO(user *entity.User) *userDTO <span class="cov10" title="2">{
         return &amp;userDTO{
                 ID:    user.ID,
                 Name:  user.Name,

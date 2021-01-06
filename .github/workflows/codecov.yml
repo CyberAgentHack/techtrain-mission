@@ -21,7 +21,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - name: Test Go Code
-        run: go test -covermode=atomic -coverprofile=coverage.txt ./gameapi/...
+        run: make test-coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:

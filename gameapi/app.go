@@ -64,7 +64,7 @@ func (g *GameAPI) Run() error {
 		return err
 	}
 
-	return errors.New("Correctly Shutdown")
+	return errors.New("correctly Shutdown")
 }
 
 func (g *GameAPI) setDB() (err error) {

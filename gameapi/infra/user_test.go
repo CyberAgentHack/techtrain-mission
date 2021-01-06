@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/task4233/techtrain-mission/gameapi/domain/entity"
+	"github.com/task4233/techtrain-mission/gameapi/log"
 	"github.com/task4233/techtrain-mission/gameapi/mock"
-	"github.com/task4233/tecktrain-mission/gameapi/log"
 )
 
 var (

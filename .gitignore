@@ -2,8 +2,8 @@
 
 # Golang
 server
-profile
-cover.html
+*.txt
+*.html
 
 # MySQL
 mysql/mysql-data

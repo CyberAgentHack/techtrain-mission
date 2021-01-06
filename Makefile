@@ -19,13 +19,14 @@ down:
 
 .PHONY:test
 test: lint docker-up-for-test
-	$(ENV_TEST) go test -v -count=1 ./gameapi/...
+	$(ENV_TEST) go test -v -count=1 -covermode=atomic ./gameapi/...
 	make down
 
 .PHONY:test-coverage
 test-coverage: lint docker-up-for-test
-	$(ENV_TEST) go test -v -count=1 -coverprofile=coverage.txt ./gameapi/...
+	$(ENV_TEST) go test -v -count=1 -covermode=atomic -coverprofile=coverage.txt ./gameapi/...
 	go tool cover -html=coverage.txt -o ./cover.html
+	make down
 
 .PHONY:build
 build: lint

@@ -1,34 +1,28 @@
-package infra
+package mock_test
 
-// This test does not use mock
-/*
-func TestUserInfraWithMySQL(t *testing.T) {
+import (
+	"testing"
+
+	"github.com/task4233/techtrain-mission/gameapi/domain/entity"
+	"github.com/task4233/techtrain-mission/gameapi/mock"
+)
+
+func TestUserInfraWithMock(t *testing.T) {
+	t.Parallel()
 	// scenario
 	// 1. Store User with name
 	// 2. Get User information
 	// 3. Update User information
 
-	db, err := NewDB()
-	if err != nil {
-		t.Errorf("failed NewDB: %v", err)
-		os.Exit(1)
-	}
-	if db == nil {
-		t.Errorf("failed to connect NewDB")
-		os.Exit(1)
-	}
-	defer func() {
-		cerr := db.Close()
-		if err != nil {
-			logger.Debugf("failed Close(): %w", cerr)
-		}
-	}()
-	userRepo := NewUserRepository(db)
+	userRepo := mock.NewTestUserRepository()
 
 	// 1. Store
 	userE := entity.NewUser("test user")
 	if err := userRepo.Store(userE); err != nil {
 		t.Errorf("failed Store: %v", err)
+	}
+	if err := userE.IsValid(); err != nil {
+		t.Errorf("invalid user entity: %w", err)
 	}
 
 	// 2. Get
@@ -38,7 +32,7 @@ func TestUserInfraWithMySQL(t *testing.T) {
 		t.Errorf("failed Get: %v", err)
 	}
 	if err := recordE.IsValid(); err != nil {
-		t.Errorf("invalid user entity: %v, %v", recordE, err)
+		t.Errorf("invalid user entity: %w", err)
 	}
 
 	// 3. Update
@@ -47,7 +41,7 @@ func TestUserInfraWithMySQL(t *testing.T) {
 		t.Errorf("failed Update: %v", err)
 	}
 	if err := recordE.IsValid(); err != nil {
-		t.Errorf("invalid user entity: %v, %v", recordE, err)
+		t.Errorf("invalid user entity: %w", err)
 	}
 	var testE *entity.User = entity.NewUser("")
 	testE.Token = recordE.Token
@@ -55,10 +49,9 @@ func TestUserInfraWithMySQL(t *testing.T) {
 		t.Errorf("failed Get: %v", err)
 	}
 	if err := testE.IsValid(); err != nil {
-		t.Errorf("invalid user entity: %v, %v", testE, err)
+		t.Errorf("invalid user entity: %w", err)
 	}
 	if testE.Token != recordE.Token {
 		t.Errorf("might fail to update, actual: %v, wanted: %v", testE, recordE)
 	}
 }
-*/

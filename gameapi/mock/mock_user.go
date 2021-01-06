@@ -47,7 +47,7 @@ func (t *TestUserRepository) Update(user *entity.User) error {
 	for _, record := range t.records {
 		if record.Token == user.Token {
 			user.ID = record.ID
-			user.Name = record.Name
+			record.Name = user.Name
 			return nil
 		}
 	}

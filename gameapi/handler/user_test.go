@@ -58,12 +58,9 @@ func TUserCreate(t *testing.T, user *handler.User) {
 			t.Errorf("got: %d, wanted: %d", got.StatusCode, tc.wantStatus)
 		}
 
-		body, err := ioutil.ReadAll(got.Body)
-		if err != nil {
-			t.Errorf("failed ioutil.ReadAll: %v", err)
-		}
-		// check it not empty as token is dynamically generated
-		if len(string(body)) == 0 {
+		buf := make([]byte, 1)
+		length, err := got.Body.Read(buf)
+		if err != nil && length == 0 {
 			t.Error("response body is empty")
 		}
 	}

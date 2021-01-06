@@ -68,3 +68,24 @@ func TestIsDev(t *testing.T) {
 		})
 	}
 }
+
+func TestIsTest(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		name string
+		want bool
+	}{
+		{
+			name: "正しくDEVを取得できる",
+			want: true,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := config.IsTest(); got != tc.want {
+				t.Errorf("IsTest() = %v, want = %v", got, tc.want)
+			}
+		})
+	}
+}

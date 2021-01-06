@@ -1,12 +1,16 @@
 package infra
 
 import (
-	"log"
 	"os"
 	"testing"
 
 	"github.com/task4233/techtrain-mission/gameapi/domain/entity"
 	"github.com/task4233/techtrain-mission/gameapi/mock"
+	"github.com/task4233/tecktrain-mission/gameapi/log"
+)
+
+var (
+	logger = log.MyLogger
 )
 
 // This test does not use mock
@@ -28,7 +32,7 @@ func TestUserInfraWithMySQL(t *testing.T) {
 	defer func() {
 		cerr := db.Close()
 		if err != nil {
-			log.Println(cerr)
+			logger.Debugf("failed Close(): %w", cerr)
 		}
 	}()
 	userRepo := NewUserRepository(db)

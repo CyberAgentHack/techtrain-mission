@@ -71,7 +71,6 @@ func TUserCreate(t *testing.T, user *handler.User) {
 
 func TUserGet(t *testing.T, user *handler.User) {
 	logger := log.MyLogger
-	log.SetDebugStatus(true)
 
 	// prepare test data
 	reqStruct := handler.UserCreateRequest{Name: "test user"}

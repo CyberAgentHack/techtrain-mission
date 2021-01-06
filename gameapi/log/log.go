@@ -24,7 +24,7 @@ func SetDebugStatus(status bool) {
 	debugOn = status
 }
 
-var debugOn = config.IsDev()
+var debugOn = config.IsTest()
 
 // MyLogger exports the pointer log.Logger
 // If you use other logger, replace logger in `func init()`

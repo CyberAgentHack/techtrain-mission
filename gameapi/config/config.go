@@ -26,3 +26,8 @@ func DSN() string {
 func IsDev() bool {
 	return os.Getenv("ENV") == "dev"
 }
+
+// IsTest returns for test or not
+func IsTest() bool {
+	return os.Getenv("ENV") == "test"
+}

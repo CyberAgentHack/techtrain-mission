@@ -1,4 +1,5 @@
 # gameapi - TechTrainMISSION
+[![CI](https://github.com/task4233/techtrain-mission/workflows/CI%20for%20codecov/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/task4233/techtrain-mission)](https://goreportcard.com/report/github.com/task4233/techtrain-mission)
 [![codecov](https://codecov.io/gh/task4233/techtrain-mission/branch/master/graph/badge.svg?token=H0678EMPJN)](https://codecov.io/gh/task4233/techtrain-mission)
 

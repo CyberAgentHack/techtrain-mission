@@ -20,6 +20,7 @@ down:
 .PHONY:test
 test: lint docker-up-for-test
 	$(ENV_TEST) go test -v -count=1 ./gameapi/...
+	make down
 
 .PHONY:test-coverage
 test-coverage: lint docker-up-for-test

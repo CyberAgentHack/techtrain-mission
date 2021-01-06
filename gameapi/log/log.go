@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/task4233/techtrain-mission/gameapi/config"
 )
 
 // Logger is interface for two levels logging
@@ -22,7 +24,7 @@ func SetDebugStatus(status bool) {
 	debugOn = status
 }
 
-var debugOn = false
+var debugOn = config.IsDev()
 
 // MyLogger exports the pointer log.Logger
 // If you use other logger, replace logger in `func init()`

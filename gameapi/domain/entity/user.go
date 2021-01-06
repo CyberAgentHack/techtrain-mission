@@ -28,7 +28,7 @@ func NewUser(name string) *User {
 // IsValid validates user entity
 // It might be moved domain service
 func (u *User) IsValid() error {
-	if u.ID == -1 {
+	if u.ID < 0 {
 		return errors.New("user.ID is not assigned")
 	}
 	if len(u.Name) == 0 {

@@ -21,3 +21,8 @@ func DSN() string {
 		os.Getenv("DB_DATABASE"),
 	) + "?parseTime=true&collation=utf8mb4_bin"
 }
+
+// IsDev returns for development or not
+func IsDev() bool {
+	return os.Getenv("ENV") == "dev"
+}
